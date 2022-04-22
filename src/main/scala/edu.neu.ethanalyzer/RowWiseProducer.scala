@@ -3,7 +3,10 @@ package edu.neu.ethanalyzer
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{Row, SQLContext, SparkSession}
 import Schemas.{blocks_schema, transactions_schema}
-
+import Schemas.{blocks_schema, transactions_schema}
+import scala.concurrent.{Await,Future}
+import scala.concurrent.duration.Duration
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /*
 Reads the data from .csv files and writes it to corresponding Kafka topics in batches.
