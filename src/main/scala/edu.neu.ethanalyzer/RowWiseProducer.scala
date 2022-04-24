@@ -1,8 +1,9 @@
 package edu.neu.ethanalyzer
 
+import java.util.Properties
+import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{Row, SQLContext, SparkSession}
-import Schemas.{blocks_schema, transactions_schema}
 import Schemas.{blocks_schema, transactions_schema}
 import scala.concurrent.{Await,Future}
 import scala.concurrent.duration.Duration
@@ -22,7 +23,34 @@ object RowWiseProducer {
     (a,b)
   }
 
-  def write_to_topic(data: Array[Row], topic: String): Unit = ???
+  def write_to_topic(data: Array[Row], topic: String): Unit = {
+    val props = new Properties()
+    props.put("bootstrap.servers","localhost:9092")
+    props.put("key.serializer",
+      "org.apache.kafka.common.serialization.StringSerializer")
+    props.put("value.serializer",
+      "org.apache.kafka.common.serialization.StringSerializer")
+    props.put("acks","all")
+
+    val producer = new KafkaProducer[String, String](props)
+
+    var count = 0
+
+    for (row <- data) {
+      val key = row.get(0).toString
+
+      val value = row.get(1).toString
+
+      val record = new ProducerRecord[String, String](topic, key, value)
+      val metadata = producer.send(record)
+
+      println(s"Wrote to topic: ${topic}")
+
+      count = count + 1
+
+      if (count % 50 == 0) {println("Sleeping for 5 seconds"); Thread.sleep(5000)}
+    }
+  }
 
   def main(args: Array[String]): Unit = {
     val spark: SparkSession = SparkSession
