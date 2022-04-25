@@ -15,14 +15,18 @@ Running this program simulates an enviornment where a number of transactions are
 N seconds.
 */
 object RowWiseProducer {
-
+/*
+Checks the source file(csv) for addition of new rows
+*/
   def parallel[A, B](taskA: =>A, taskB: =>B): (A,B) = {
     val fB:Future[B] = Future { taskB }
     val a:A = taskA
     val b:B = Await.result(fB, Duration.Inf)
     (a,b)
   }
-
+/*
+Each topic contains rows divided and read in batches every 5 secs
+*/
   def write_to_topic(data: Array[Row], topic: String): Unit = {
     val props = new Properties()
     props.put("bootstrap.servers","localhost:9092")
