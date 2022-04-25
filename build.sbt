@@ -7,6 +7,10 @@ val sparkVersion = "3.2.1"
 val kafkaVersion = "3.1.0"
 
 libraryDependencies ++= Seq(
+"org.scalatest" %% "scalatest" % "2.12.15" % Test,
+"org.mockito" %% "mockito-scala" % "1.16.23" % Test)
+
+libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.11" % "test",
   "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
   "org.apache.spark" %% "spark-streaming" % sparkVersion % "provided",
