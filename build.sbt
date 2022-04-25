@@ -20,7 +20,7 @@ libraryDependencies ++= Seq(
   "org.apache.kafka" % "kafka-streams" % kafkaVersion,
   "org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion,
   "org.apache.spark" %% "spark-sql-kafka-0-10" % sparkVersion % Test,
-  "com.fasterxml.jackson.core" % "jackson-databind" % "2.13.2.2",
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.12.2",
   "com.fasterxml.jackson.core" % "jackson-core" % "2.13.2",
   "mysql" % "mysql-connector-java" % "8.0.28"
 )
