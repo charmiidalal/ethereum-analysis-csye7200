@@ -14,6 +14,7 @@ to MySQL database in realtime using JDBC connection string.
 object TransactionsConsumer {
 
   def main(args: Array[String]): Unit = {
+    // Initiate Spark session
     val spark: SparkSession = SparkSession
       .builder()
       .appName("EthereumAnalytics")
@@ -22,6 +23,7 @@ object TransactionsConsumer {
 
     spark.sparkContext.setLogLevel("ERROR")
 
+    // Subscribe to kafka topic to listen to transaction data
     val trans_data = spark
       .readStream
       .format("kafka")
@@ -33,6 +35,7 @@ object TransactionsConsumer {
 
     trans_data.printSchema()
 
+    // Subscribe to kafka topic to listen to block data
     val blocks_data = spark
       .readStream
       .format("kafka")
@@ -44,6 +47,7 @@ object TransactionsConsumer {
 
     blocks_data.printSchema()
 
+    // Make connection to mysql database to dump the data
     val jdbcHostname = "localhost"
     val jdbcPort = 3306
     val jdbcDatabase = "crypto_db"
@@ -61,7 +65,8 @@ object TransactionsConsumer {
     val driverClass = "com.mysql.jdbc.Driver"
     connectionProperties.setProperty("Driver", driverClass)
 
-    val query1 = trans_data
+    // Query to store streamed transaction data into mysql database
+    val transQuery = trans_data
       .select("transaction.*")
       .writeStream
       .trigger(Trigger.ProcessingTime(2000))
@@ -71,7 +76,8 @@ object TransactionsConsumer {
       }})
       .start()
 
-    val query2 = blocks_data
+    // Query to store streamed block data into mysql database
+    val blockQuery = blocks_data
       .select("block.*")
       .writeStream
       .trigger(Trigger.ProcessingTime(2000))
@@ -81,8 +87,9 @@ object TransactionsConsumer {
       }})
       .start()
 
-    query1.awaitTermination()
-    query2.awaitTermination()
+    // Terminate connection and stop spark
+    transQuery.awaitTermination()
+    blockQuery.awaitTermination()
     spark.stop()
   }
 }
