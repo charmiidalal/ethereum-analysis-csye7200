@@ -55,6 +55,26 @@ object BatchConsumer {
       .mode("append")
       .jdbc(jdbcUrl, "trans_val_batch", connectionProperties)
 
+
+    val top_miners = spark.sqlContext.sql("""
+      WITH mined_block AS (
+        SELECT miner, DATE(timestamp)
+        FROM blocks
+        WHERE DATE(timestamp) > DATE_SUB(CURRENT_DATE(), 30)
+        ORDER BY miner ASC)
+      SELECT miner, COUNT(miner) AS total_block_reward
+      FROM mined_block
+      GROUP BY miner
+      ORDER BY total_block_reward DESC
+      LIMIT 10
+    """)
+
+    // Write it out to MYSQL
+    top_miners
+      .write
+      .mode("append")
+      .jdbc(jdbcUrl, "top_miners", connectionProperties)
+
     spark.stop()
   }
 }
