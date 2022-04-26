@@ -55,7 +55,7 @@ object TransactionsConsumer {
       .trigger(Trigger.ProcessingTime(2000))
       .foreachBatch({ (batchDF: Dataset[Row], _: Long) => {
         batchDF.write.mode("append")
-          .jdbc(jdbcUrl, "transactions", connectionProperties)
+          .jdbc(jdbcUrl, "transactions_stream", connectionProperties)
       }})
       .start()
 
@@ -66,7 +66,7 @@ object TransactionsConsumer {
       .trigger(Trigger.ProcessingTime(2000))
       .foreachBatch({ (batchDF: Dataset[Row], _: Long) => {
         batchDF.write.mode("append")
-          .jdbc(jdbcUrl, "blocks", connectionProperties)
+          .jdbc(jdbcUrl, "blocks_stream", connectionProperties)
       }})
       .start()
 
