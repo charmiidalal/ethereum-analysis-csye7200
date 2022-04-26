@@ -36,3 +36,7 @@ The data was downloaded and stored locally as csv files.
     - ```spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 --master localhost --class "edu.neu.ethanalyzer.TransactionsConsumer" ./target/scala-2.12/EthereumAnalytics-assembly-1.0.jar```
     - Producer using:
     - ```spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 --master localhost --class "edu.neu.ethanalyzer.RowWiseProducer" ./target/scala-2.12/EthereumAnalytics-assembly-1.0.jar```
+
+5. We have also created a BatchConsumer class to analyze the data in totality. Run it using:
+   - ```spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 --master localhost --class "edu.neu.ethanalyzer.BatchConsumer" ./target/scala-2.12/EthereumAnalytics-assembly-1.0.jar```
+```
