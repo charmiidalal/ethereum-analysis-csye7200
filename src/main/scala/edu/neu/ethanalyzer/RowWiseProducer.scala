@@ -11,32 +11,36 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 /*
 Reads the data from .csv files and writes it to corresponding Kafka topics in batches.
-Running this program simulates an enviornment where a number of transactions are occuring every
+Running this program simulates an environment where a number of transactions are occurring every
 N seconds.
 */
+
 object RowWiseProducer {
-/*
-Checks the source file(csv) for addition of new rows
-*/
+  // Function to execute two tasks in parallel
   def parallel[A, B](taskA: =>A, taskB: =>B): (A,B) = {
     val fB:Future[B] = Future { taskB }
     val a:A = taskA
     val b:B = Await.result(fB, Duration.Inf)
     (a,b)
   }
-/*
-Each topic contains rows divided and read in batches every 5 secs
-*/
-  def write_to_topic(data: Array[Row], topic: String): Unit = {
-    val props = new Properties()
-    props.put("bootstrap.servers","localhost:9092")
-    props.put("key.serializer",
-      "org.apache.kafka.common.serialization.StringSerializer")
-    props.put("value.serializer",
-      "org.apache.kafka.common.serialization.StringSerializer")
-    props.put("acks","all")
 
-    val producer = new KafkaProducer[String, String](props)
+  // Define properties for Kafka Producer
+  val props = new Properties()
+  props.put("bootstrap.servers","localhost:9092")
+  props.put("key.serializer",
+    "org.apache.kafka.common.serialization.StringSerializer")
+  props.put("value.serializer",
+    "org.apache.kafka.common.serialization.StringSerializer")
+  props.put("acks","all")
+
+  val producer = new KafkaProducer[String, String](props)
+
+
+  /*
+    Writes the data to Kafka topic with the specific batch size, then sleeps
+    for a specific and writes it again
+  */
+  def write_to_topic(data: Array[Row], topic: String, batch_size: Int, sleep_time: Int): Unit = {
 
     var count = 0
 
@@ -46,13 +50,13 @@ Each topic contains rows divided and read in batches every 5 secs
       val value = row.get(1).toString
 
       val record = new ProducerRecord[String, String](topic, key, value)
-      val metadata = producer.send(record)
+      producer.send(record)
 
       println(s"Wrote to topic: ${topic}")
 
       count = count + 1
 
-      if (count % 50 == 0) {println("Sleeping for 5 seconds"); Thread.sleep(5000)}
+      if (count % batch_size == 0) {println(s"Sleeping for ${sleep_time} seconds"); Thread.sleep(sleep_time * 1000)}
     }
   }
 
@@ -76,8 +80,8 @@ Each topic contains rows divided and read in batches every 5 secs
 
 
     parallel(
-      write_to_topic(trans_query, "eth_transactions"),
-      write_to_topic(blocks_query, "eth_blocks")
+      write_to_topic(trans_query, "eth_transactions", 50, 5),
+      write_to_topic(blocks_query, "eth_blocks", 50, 5)
     )
 
   }
