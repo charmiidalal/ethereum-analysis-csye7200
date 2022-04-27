@@ -19,8 +19,17 @@ services:
   superset:
     image: amancevice/superset
     restart: always
+    depends_on:
+      - mysql
     ports:
       - "8088:8088"
+    volumes:
+      - "./superset_config.py:/etc/superset/superset_config.py"
+  redis:
+    image: redis
+    restart: always
+    volumes:
+      - "./redis:/data"
   mysql:
     image: mysql:latest
     command: --default-authentication-plugin=mysql_native_password
