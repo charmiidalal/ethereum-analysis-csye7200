@@ -21,6 +21,7 @@ The data was downloaded and stored locally as csv files.
     - `Zookeeper` (required for kafka): 2181
     - `Kafka`: 9092
     - `Superset`: 8088
+    - `Redis` (to enable persistence of our dashboards)
     - `Mysql`: 3306
 
 3. Setup Apache-Superset through the following command (this will configure superset and you will be able to connect to it on port **8088**:
@@ -33,10 +34,19 @@ The data was downloaded and stored locally as csv files.
     - `sbt assembly` -> This will create the .jar file for the project using the **assembly** plugin
 
     - Run the consumer using:
-    - ```spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 --master localhost --class "edu.neu.ethanalyzer.TransactionsConsumer" ./target/scala-2.12/EthereumAnalytics-assembly-1.0.jar```
+    - ```spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 --master localhost --class "edu.neu.ethanalyzer.StreamingConsumer" ./target/scala-2.12/EthereumAnalytics-assembly-1.0.jar```
     - Producer using:
-    - ```spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 --master localhost --class "edu.neu.ethanalyzer.RowWiseProducer" ./target/scala-2.12/EthereumAnalytics-assembly-1.0.jar```
+    - ```spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 --master localhost --class "edu.neu.ethanalyzer.DataProducer" ./target/scala-2.12/EthereumAnalytics-assembly-1.0.jar```
 
 5. We have also created a BatchConsumer class to analyze the data in totality. Run it using:
    - ```spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 --master localhost --class "edu.neu.ethanalyzer.BatchConsumer" ./target/scala-2.12/EthereumAnalytics-assembly-1.0.jar```
-```
+
+## Screenshots
+
+### Block Metrics Dashboard
+
+![block_metrics_dashboard](/images/block_metrics_dashboard.png)
+
+### Average Ether Cost Per Transaction 
+
+![avg_ether_cost](/images/average_ether_cost_per_transaction.png)
