@@ -9,6 +9,7 @@ import org.apache.spark.sql.{DataFrame, SQLContext, SparkSession}
 Loads data from CSV files, makes necessary aggregations and writes the dataframes to MYSQL tables
 through JDBC
 */
+
 object BatchConsumer {
 
   def write_to_db(df: DataFrame, table_name: String): Unit = {
