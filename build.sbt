@@ -14,7 +14,7 @@ libraryDependencies ++= Seq(
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % akkaVersion % Test,
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
-  "org.scalatest" %% "scalatest" % "3.0.6" % "test",
+  "org.scalatest" %% "scalatest" % "3.2.11" % "test",
   "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
   "org.apache.spark" %% "spark-streaming" % sparkVersion % "provided",
   "org.apache.spark" %% "spark-sql" % sparkVersion % "provided",
