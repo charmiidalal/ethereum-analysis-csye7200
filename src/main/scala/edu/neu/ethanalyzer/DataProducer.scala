@@ -15,7 +15,7 @@ Running this program simulates an environment where a number of transactions are
 N seconds.
 */
 
-object RowWiseProducer {
+object DataProducer {
   // Function to execute two tasks in parallel
   def parallel[A, B](taskA: =>A, taskB: =>B): (A,B) = {
     val fB:Future[B] = Future { taskB }

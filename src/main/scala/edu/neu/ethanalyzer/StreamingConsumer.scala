@@ -12,7 +12,7 @@ import org.apache.spark.sql.types.StringType
 Reads the data stream from Kafka topics through the Spark-Streaming API, and writes it
 to MySQL database in realtime using JDBC connection string.
 */
-object TransactionsConsumer {
+object StreamingConsumer {
 
   def main(args: Array[String]): Unit = {
     // Initiate Spark session
