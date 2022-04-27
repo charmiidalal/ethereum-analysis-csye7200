@@ -1,6 +1,5 @@
 /target/*
 /checkpoint/*
-/data/*
 /project/project
 /project/target
 /project/project/*
