@@ -49,4 +49,4 @@ The data was downloaded and stored locally as csv files.
 
 ### Average Ether Cost Per Transaction 
 
-![avg_ether_cost](/images/average_ether_cost_per_transaction.png)
+![transaction_dashboard](/images/transaction_dashboard.png)
