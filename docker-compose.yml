@@ -37,7 +37,7 @@ services:
       - "./.mysql-data/db:/var/lib/mysql"
     restart: always
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       MYSQL_DATABASE: crypto_db
       MYSQL_USER: team3
